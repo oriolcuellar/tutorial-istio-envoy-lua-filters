@@ -30,12 +30,11 @@ static_resources:
               default_source_code:
                 inline_string: 
                   uuid = (loadfile "/var/lib/lua/uuid.lua")()
-                  function envoy_on_request(request_handle)
-                    request_handle:headers():add("foo", "bar")
-                  end
-                  function envoy_on_response(response_handle)
-                    body_size = response_handle:body():length()
-                    response_handle:headers():add("response-body-size", tostring(body_size))
+                   function envoy_on_request(request_handle)
+                    local correlationid = request_handle:headers():get("correlationid")
+                    if correlationid == nil then
+                      request_handle:headers():replace("correlationid","GEN-"..uuid())
+                    end
                   end
           - name: envoy.filters.http.router
             typed_config: 
