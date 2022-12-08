@@ -29,13 +29,12 @@ static_resources:
               "@type": type.googleapis.com/envoy.extensions.filters.http.lua.v3.Lua
               default_source_code:
                 inline_string: 
-                  uuid = (loadfile "/var/lib/lua/uuid.lua")()
+                  uuid = (loadfile "/var/lib/lua/uuid.lua")() -- one-time load of the routines
                   function envoy_on_request(request_handle)
-                    request_handle:headers():add("foo", "bar")
-                  end
-                  function envoy_on_response(response_handle)
-                    body_size = response_handle:body():length()
-                    response_handle:headers():add("response-body-size", tostring(body_size))
+                    local correlationid = request_handle:headers():get("correlationid")
+                    if correlationid == nil then
+                      request_handle:headers():replace("correlationid","GEN-"..uuid())
+                    end
                   end
           - name: envoy.filters.http.router
             typed_config: 
