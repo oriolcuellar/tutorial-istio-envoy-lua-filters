@@ -9,7 +9,7 @@ filter that contains two functions namely
 
 # Usage
 1. `docker-compose pull`
-2. `docker-compose up --build`
+2. `docker-compose up --build -d`
 3. `curl -v localhost:8000`
 
 ## Sample Output:
