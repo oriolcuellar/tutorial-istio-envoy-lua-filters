@@ -1,5 +1,5 @@
 
-#Notas Oriol
+# Notas Oriol
 `Ejercicios modificados de https://github.com/ibm-cloud-architecture/tutorial-istio-envoy-lua-filters
 `Se han actualizado las la version de Lua de la 2 a la 3 y modificado incompatibilidades de funciones en la nueva versión.
 
@@ -11,7 +11,7 @@
 `example-5 NO ACTUALIZADO`
 `example-6 NO ACTUALIZADO`
 
-
+----------------------------------------------------------------------------------
 
 In this example, we show how a Lua filter can be used with the Envoy
 proxy. The Envoy proxy [configuration](./envoy.yaml) includes a lua
