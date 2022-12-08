@@ -7,9 +7,9 @@ static_resources:
         port_value: 80
     filter_chains:
     - filters:
-      - name: envoy.http_connection_manager
+      - name: envoy.filters.network.http_connection_manager
         typed_config:
-          "@type": type.googleapis.com/envoy.config.filter.network.http_connection_manager.v2.HttpConnectionManager
+          "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
           stat_prefix: ingress_http
           codec_type: auto
           route_config:
@@ -26,17 +26,19 @@ static_resources:
           http_filters:
           - name: envoy.lua
             typed_config:
-              "@type": type.googleapis.com/envoy.config.filter.http.lua.v2.Lua
-              inline_code: |
-                function envoy_on_request(request_handle)
-                  request_handle:headers():add("foo", "bar")
-                end
-                function envoy_on_response(response_handle)
-                  body_size = response_handle:body():length()
-                  response_handle:headers():add("response-body-size", tostring(body_size))
-                end
-          - name: envoy.router
-            typed_config: {}
+              "@type": type.googleapis.com/envoy.extensions.filters.http.lua.v3.Lua
+              default_source_code:
+                inline_string: 
+                  function envoy_on_request(request_handle)
+                    request_handle:headers():add("foo", "bar")
+                  end
+                  function envoy_on_response(response_handle)
+                    body_size = response_handle:body():length()
+                    response_handle:headers():add("response-body-size", tostring(body_size))
+                  end
+          - name: envoy.filters.http.router
+            typed_config: 
+              "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
 
   clusters:
   - name: web_service
